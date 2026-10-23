@@ -9,6 +9,8 @@ export const daftarMajalah = [
       '/majalah/edisi-1/1.png',
       '/majalah/edisi-1/2.png',
       '/majalah/edisi-1/3.png',
+      '/majalah/edisi-1/4.png',
+      '/majalah/edisi-1/5.png',
       // ... tambahkan semua halaman
     ]
   },
