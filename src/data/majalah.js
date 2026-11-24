@@ -2,7 +2,7 @@
 export const daftarMajalah = [
   {
     id: 'edisi-1',
-    judul: 'Dinamika Spensata',
+    judul: 'Retrosa Edisi 1',
     edisi: 'September 2026',
     cover: '/majalah/edisi-1/1.png',
     halaman: [
