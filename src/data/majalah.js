@@ -42,9 +42,10 @@ export const daftarMajalah = [
       '/majalah/edisi-1/34.png',
     ]
   },
+
   {
     id: 'edisi-2',
-    judul: 'Edisi Spesial',
+    judul: 'Edisi 2',
     edisi: 'Desember 2026',
     cover: '/majalah/edisi-2/1.jpg',
     halaman: [

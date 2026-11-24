@@ -59,8 +59,19 @@ function Navbar() {
 
 /* ---------- Hero ---------- */
 function Hero({ daftar }) {
-  const tumpuk = daftar.slice(0, 3);
-  // posisi & rotasi tiap sampul dalam tumpukan
+  // Pastikan majalah pertama (daftar[0]) ada di TENGAH.
+  // Ambil maksimal 3 majalah: index 0 (tengah), index 1 (kiri), index 2 (kanan).
+  const edisiUtama = daftar[0];
+  const edisiLain = daftar.slice(1, 3); // Ambil maksimal 2 majalah lainnya
+
+  // Susun urutan render: [Kiri, TENGAH, Kanan]
+  const tumpuk = [
+    edisiLain[0], // Kiri
+    edisiUtama,   // TENGAH (Edisi 1 / Terbaru)
+    edisiLain[1], // Kanan
+  ].filter(Boolean); // Buang jika data kurang dari 3
+
+  // Posisi & rotasi berdasarkan index (0=Kiri, 1=Tengah, 2=Kanan)
   const gaya = [
     'left-[4%] top-[14%] w-[44%] -rotate-[8deg] z-10',
     'left-[28%] top-[2%] w-[46%] rotate-[3deg] z-20',
@@ -99,6 +110,8 @@ function Hero({ daftar }) {
         {/* Tumpukan sampul */}
         <div className="relative mx-auto h-[380px] w-full max-w-md sm:h-[460px]">
           <div className="absolute inset-x-6 bottom-2 top-10 rounded-[2.5rem] bg-[#FFC531]" />
+          
+          {/* Render tumpukan berdasarkan urutan yang sudah disusun */}
           {tumpuk.map((m, i) => (
             <Link
               key={m.id}

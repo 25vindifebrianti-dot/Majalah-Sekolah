@@ -3,8 +3,8 @@ import { useParams, Link } from 'react-router-dom';
 import HTMLFlipBook from 'react-pageflip';
 import { daftarMajalah } from '../data/majalah';
 
-// Ganti sesuai rasio gambar halamanmu (tinggi / lebar). Contoh: 1.4 = 5:7
-const RASIO = 1.4;
+// Rasio kertas A4 = 297 / 210
+const RASIO = 316 / 210;
 const ZOOM_MIN = 1;
 const ZOOM_MAX = 3;
 const ZOOM_LANGKAH = 0.5;
@@ -15,12 +15,18 @@ function hitungUkuran() {
   const h = window.innerHeight;
   const mobile = w < 768;
 
-  const tinggiTersedia = h - (mobile ? 200 : 190);
-  const lebarTersedia = mobile ? w - 16 : w - 120;
+  // Dikurangi header, footer, dan sedikit margin
+  const tinggiTersedia = h - (mobile ? 180 : 170);
+  const lebarTersedia = mobile ? w - 16 : w - 100;
 
+  // Lebar 1 halaman berdasarkan tinggi & lebar layar
   const lebarDariTinggi = tinggiTersedia / RASIO;
   const lebarDariLayar = lebarTersedia / 2;
-  const width = Math.floor(Math.max(120, Math.min(lebarDariTinggi, lebarDariLayar)));
+
+  // Ambil yang paling pas
+  const width = Math.floor(
+    Math.max(120, Math.min(lebarDariTinggi, lebarDariLayar))
+  );
 
   return { width, height: Math.floor(width * RASIO), mobile };
 }
@@ -73,7 +79,7 @@ function FlipbookPage() {
   const sebelumnya = useCallback(() => bookRef.current?.pageFlip().flipPrev(), []);
   const berikutnya = useCallback(() => bookRef.current?.pageFlip().flipNext(), []);
 
-  // Keyboard: panah = balik halaman, + / - / 0 = zoom
+  // Keyboard
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === 'ArrowLeft') sebelumnya();
@@ -97,12 +103,12 @@ function FlipbookPage() {
     else document.documentElement.requestFullscreen?.();
   };
 
-  // Scroll mouse di area buku = zoom
+  // Scroll mouse = zoom
   const onWheel = (e) => {
     ubahZoom(zoom + (e.deltaY < 0 ? 0.25 : -0.25));
   };
 
-  // Geser buku saat di-zoom (mouse & sentuhan)
+  // Geser buku
   const mulaiGeser = (e) => {
     e.currentTarget.setPointerCapture(e.pointerId);
     titikAwal.current = { x: e.clientX, y: e.clientY };
@@ -212,7 +218,8 @@ function FlipbookPage() {
                     alt={`Halaman ${index + 1}`}
                     draggable={false}
                     decoding="async"
-                    className="pointer-events-none block h-full w-full select-none object-cover"
+                    /* PERUBAHAN PENTING: object-contain agar gambar utuh tidak kepotong */
+                    className="pointer-events-none block h-full w-full select-none object-contain"
                     onError={(e) => {
                       e.target.style.display = 'none';
                       e.target.parentNode.insertAdjacentHTML(
@@ -237,7 +244,7 @@ function FlipbookPage() {
           </HTMLFlipBook>
         </div>
 
-        {/* Saat di-zoom: lapisan ini menangkap sentuhan/drag untuk menggeser buku */}
+        {/* Area geser saat zoom */}
         {zoom > 1 && (
           <div
             onPointerDown={mulaiGeser}
